@@ -13,7 +13,7 @@ function App() {
   return (
     <main className="calculator">
       <section className="loan-choice">
-        <div className="slider-amout">
+        <div className="slider-amount">
           <div className="form-group">
             <label>Total amount</label>
             <div className="select-wrapper">
@@ -31,6 +31,10 @@ function App() {
             step="100"
             onChange={event => amoutRange(event.target.value)}
           />
+          <div className="flex-group">
+            <p className="m-0 medium-font">$300</p>
+            <p className="m-0 medium-font">$800</p>
+          </div>
         </div>
         <div className="slider-term">
           <div className="form-group">
@@ -50,32 +54,36 @@ function App() {
             step="1"
             onChange={event => termRange(event.target.value)}
           />
+          <div className="flex-group">
+            <p className="m-0 medium-font">7</p>
+            <p className="m-0 medium-font">30</p>
+          </div>
         </div>
       </section>
       <section className="loan-info">
-        <div className="flex-group">
+        <div className="flex-group border-bottom-black">
           <p>Loan</p>
           <p>$1,000.00 MXN</p>
         </div>
-        <div className="flex-group">
+        <div className="flex-group border-bottom-black">
           <p>Term</p>
           <p>18 days</p>
         </div>
-        <div className="flex-group">
+        <div className="flex-group border-bottom-black">
           <p>Interest</p>
           <div>
             <p className="mb-0">$271.44 MXN</p>
             <p className="small-font text-center">VAT included</p>
           </div>
         </div>
-        <div className="flex-group">
+        <div className="flex-group border-bottom-black">
           <p>Commission per disposition</p>
           <div>
             <p className="mb-0">$1,358.44 MXN</p>
             <p className="small-font text-center">VAT included</p>
           </div>
         </div>
-        <div className="flex-group">
+        <div className="flex-group border-bottom-black">
           <p>
             <strong>Amount payable</strong>
           </p>
@@ -86,7 +94,7 @@ function App() {
             <p className="small-font text-center">VAT included</p>
           </div>
         </div>
-        <div className="flex-group">
+        <div className="flex-group border-bottom-black">
           <p>
             <strong>Payment date</strong>
           </p>

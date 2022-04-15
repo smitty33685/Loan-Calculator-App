@@ -10,11 +10,17 @@
 
     input[type="range"] {
       width: 100%;
-      margin: 1.5rem 0;
+      margin: 1.5rem 0 0.8rem;
+    }
+
+    .slider-amount {
+      margin-bottom: 1.5rem;
+      color: #fff;
     }
 
     .slider-term {
       border-top: 1px solid #fff;
+      color: #fff;
 
       .form-group {
         margin-top: 1.5rem;
@@ -29,7 +35,6 @@
       label {
         font-size: 1.2rem;
         font-weight: 700;
-        color: #fff;
       }
 
       select {
@@ -47,13 +52,6 @@
     width: 100%;
     padding: 1.5rem 2rem;
     box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-
-    .flex-group {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #000;
-    }
   }
 
   .btn-primary {
