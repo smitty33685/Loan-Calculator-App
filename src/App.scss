@@ -1,0 +1,89 @@
+.calculator {
+  max-width: 320px;
+
+  .loan-choice {
+    display: inline-block;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    background: #a3cd3a;
+    border-radius: 10px 10px 0 0;
+
+    input[type="range"] {
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+
+    .slider-term {
+      border-top: 1px solid #fff;
+
+      .form-group {
+        margin-top: 1.5rem;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      label {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      select {
+        min-height: 35px;
+        min-width: 90px;
+        padding: 0.15rem 0.75rem;
+        font-size: 0.9rem;
+        border: 1px solid #ccc;
+      }
+    }
+  }
+
+  .loan-info {
+    display: inline-block;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+
+    .flex-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #000;
+    }
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.5rem 0;
+    background: #a3cd3a;
+    margin-top: 1.5rem;
+    color: #fff;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+  }
+
+  .select-wrapper {
+    position: relative;
+
+    p {
+      position: absolute;
+      right: 17px;
+      color: #a8a8a8;
+      margin: 0;
+
+      &.term-value {
+        top: 12px;
+      }
+
+      &.amount-value {
+        top: 9px;
+      }
+    }
+  }
+}

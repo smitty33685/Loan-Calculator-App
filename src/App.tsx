@@ -1,8 +1,113 @@
 import React from "react";
-import "./App.css";
+import "./App.scss";
 
 function App() {
-  return <div className="App"></div>;
+  const amoutRange = (val: string) => {
+    console.log(val);
+  };
+
+  const termRange = (val: string) => {
+    console.log(val);
+  };
+
+  return (
+    <main className="calculator">
+      <section className="loan-choice">
+        <div className="slider-amout">
+          <div className="form-group">
+            <label>Total amount</label>
+            <div className="select-wrapper">
+              <select id="amount">
+                <option value="300">300</option>
+              </select>
+              <p className="amount-value">$</p>
+            </div>
+          </div>
+          <input
+            type="range"
+            id="amount-range"
+            min="300"
+            max="8000"
+            step="100"
+            onChange={event => amoutRange(event.target.value)}
+          />
+        </div>
+        <div className="slider-term">
+          <div className="form-group">
+            <label>Term</label>
+            <div className="select-wrapper">
+              <select>
+                <option value="7">7</option>
+              </select>
+              <p className="term-value small-font">days</p>
+            </div>
+          </div>
+          <input
+            type="range"
+            id="term-range"
+            min="7"
+            max="30"
+            step="1"
+            onChange={event => termRange(event.target.value)}
+          />
+        </div>
+      </section>
+      <section className="loan-info">
+        <div className="flex-group">
+          <p>Loan</p>
+          <p>$1,000.00 MXN</p>
+        </div>
+        <div className="flex-group">
+          <p>Term</p>
+          <p>18 days</p>
+        </div>
+        <div className="flex-group">
+          <p>Interest</p>
+          <div>
+            <p className="mb-0">$271.44 MXN</p>
+            <p className="small-font text-center">VAT included</p>
+          </div>
+        </div>
+        <div className="flex-group">
+          <p>Commission per disposition</p>
+          <div>
+            <p className="mb-0">$1,358.44 MXN</p>
+            <p className="small-font text-center">VAT included</p>
+          </div>
+        </div>
+        <div className="flex-group">
+          <p>
+            <strong>Amount payable</strong>
+          </p>
+          <div>
+            <p className="mb-0">
+              <strong>$1,358.44 MXN</strong>
+            </p>
+            <p className="small-font text-center">VAT included</p>
+          </div>
+        </div>
+        <div className="flex-group">
+          <p>
+            <strong>Payment date</strong>
+          </p>
+          <p>
+            <strong>23/APR/2022</strong>
+          </p>
+        </div>
+
+        <section className="text-content">
+          <p>
+            <strong>CAT: 7051.76 %</strong> average without VAT for informational and comparison purposes only.
+          </p>
+          <p>Calculation date: 15/APR/2022</p>
+          <p>Calculator for informational and comparison purposes.</p>
+          <p>We never request advances, fees, policy payments or any other concept to grant you a loan.</p>
+        </section>
+
+        <button className="btn-primary">Request it now</button>
+      </section>
+    </main>
+  );
 }
 
 export default App;
