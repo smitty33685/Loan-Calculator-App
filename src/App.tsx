@@ -1,13 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { API_URL } from "./utils/constants";
 import "./App.scss";
 
-function App() {
+const App = () => {
   const amoutRange = (val: string) => {
     console.log(val);
   };
 
   const termRange = (val: string) => {
     console.log(val);
+  };
+
+  useEffect(() => {
+    getConfiguration();
+  }, []);
+
+  const getConfiguration = async () => {
+    try {
+      const response = await fetch(`${API_URL}/constraints`);
+      const data = await response.json();
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getLoanInfo = async () => {
+    const amount = 0;
+    const term = 0;
+
+    try {
+      const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amount}&term=${term}`);
+      const data = await response.json();
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -112,10 +142,12 @@ function App() {
           <p>We never request advances, fees, policy payments or any other concept to grant you a loan.</p>
         </section>
 
-        <button className="btn-primary">Request it now</button>
+        <button onClick={getLoanInfo} className="btn-primary">
+          Request it now
+        </button>
       </section>
     </main>
   );
-}
+};
 
 export default App;
