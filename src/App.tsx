@@ -8,8 +8,11 @@ import "./App.scss";
 const App = () => {
   const calculatorConfiguration = useSelector((state: RootState) => state.calculatorConfiguration);
   const loanInformation = useSelector((state: RootState) => state.loanInformation);
-  const [amount, setAmount] = useState(0);
-  const [term, setTerm] = useState(0);
+  const [amount, setAmount] = useState<number>(0);
+  const [term, setTerm] = useState<number>(0);
+  const [amountOptions, setAmountOptions] = useState<number[]>([]);
+  const [termOptions, setTermOptions] = useState<number[]>([]);
+
   const dispatch = useDispatch();
 
   const amoutRange = (val: string) => {
@@ -21,14 +24,21 @@ const App = () => {
   };
 
   useEffect(() => {
-    // TODO FIGURE OUT HOW TO CALL IT
-    Promise.all([getConfiguration(), getLoanInfo()]);
+    getConfiguration();
   }, []);
 
-  // TODO FIGURE OUT BETTER SOLUTION
   useEffect(() => {
-    setAmount(calculatorConfiguration.amountInterval?.defaultValue);
-    setTerm(calculatorConfiguration.termInterval?.defaultValue);
+    if (calculatorConfiguration.amountInterval && calculatorConfiguration.termInterval) {
+      setAmount(calculatorConfiguration.amountInterval.defaultValue);
+      setTerm(calculatorConfiguration.termInterval.defaultValue);
+      getLoanInfo(
+        calculatorConfiguration.amountInterval.defaultValue,
+        calculatorConfiguration.termInterval.defaultValue,
+      );
+
+      setAmountSelect(calculatorConfiguration.amountInterval.min, calculatorConfiguration.amountInterval.max);
+      setTermSelect(calculatorConfiguration.termInterval.min, calculatorConfiguration.termInterval.max);
+    }
   }, [calculatorConfiguration]);
 
   const getConfiguration = async () => {
@@ -42,15 +52,33 @@ const App = () => {
     }
   };
 
-  const getLoanInfo = async () => {
+  const getLoanInfo = async (amountParam: number = amount, termParam: number = term) => {
     try {
-      const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amount}&term=${term}`);
+      const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amountParam}&term=${termParam}`);
       const data = await response.json();
 
       dispatch(setInformation(data));
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const setAmountSelect = (min: number, max: number) => {
+    let options: number[] = [];
+
+    for (let i = min; i <= max; i = i + 10) {
+      options.push(i);
+    }
+    setAmountOptions(options);
+  };
+
+  const setTermSelect = (min: number, max: number) => {
+    let options: number[] = [];
+
+    for (let i = min; i <= max; i = i + 1) {
+      options.push(i);
+    }
+    setTermOptions(options);
   };
 
   const showContent = () => {
@@ -71,9 +99,12 @@ const App = () => {
               <div className="form-group">
                 <label>Total amount</label>
                 <div className="select-wrapper">
-                  <select id="amount">
-                    {/* TODO SET OPTIONS */}
-                    <option value="300">300</option>
+                  <select id="amount" value={amount} onChange={event => amoutRange(event.target.value)}>
+                    {amountOptions.map((el: number) => (
+                      <option key={el} value={el}>
+                        {el}
+                      </option>
+                    ))}
                   </select>
                   <p className="amount-value">$</p>
                 </div>
@@ -81,6 +112,7 @@ const App = () => {
               <input
                 type="range"
                 id="amount-range"
+                value={amount}
                 min={calculatorConfiguration.amountInterval.min}
                 max={calculatorConfiguration.amountInterval.max}
                 step={calculatorConfiguration.amountInterval.step}
@@ -95,9 +127,12 @@ const App = () => {
               <div className="form-group">
                 <label>Term</label>
                 <div className="select-wrapper">
-                  <select>
-                    {/* TODO SET OPTIONS */}
-                    <option value="7">7</option>
+                  <select id="term" value={term} onChange={event => termRange(event.target.value)}>
+                    {termOptions.map((el: number) => (
+                      <option key={el} value={el}>
+                        {el}
+                      </option>
+                    ))}
                   </select>
                   <p className="term-value small-font">days</p>
                 </div>
@@ -105,6 +140,7 @@ const App = () => {
               <input
                 type="range"
                 id="term-range"
+                value={term}
                 min={calculatorConfiguration.termInterval.min}
                 max={calculatorConfiguration.termInterval.max}
                 step={calculatorConfiguration.termInterval.step}
@@ -168,7 +204,7 @@ const App = () => {
               <p>We never request advances, fees, policy payments or any other concept to grant you a loan.</p>
             </section>
 
-            <button onClick={getLoanInfo} className="btn-primary">
+            <button onClick={() => getLoanInfo()} className="btn-primary">
               Request it now
             </button>
           </section>
