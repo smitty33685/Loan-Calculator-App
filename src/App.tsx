@@ -1,40 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API_URL } from "./utils/constants";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "./types/types";
+import { setConfiguration, setInformation } from "./actions";
 import "./App.scss";
 
 const App = () => {
+  const calculatorConfiguration = useSelector((state: RootState) => state.calculatorConfiguration);
+  const loanInformation = useSelector((state: RootState) => state.loanInformation);
+  const [amount, setAmount] = useState(0);
+  const [term, setTerm] = useState(0);
+  const dispatch = useDispatch();
+
   const amoutRange = (val: string) => {
-    console.log(val);
+    setAmount(Number(val));
   };
 
-  const termRange = (val: string) => {
-    console.log(val);
+  const termRange = (val: any) => {
+    setTerm(Number(val));
   };
 
   useEffect(() => {
     getConfiguration();
   }, []);
 
+  useEffect(() => {
+    setAmount(calculatorConfiguration.amountInterval?.defaultValue);
+    setTerm(calculatorConfiguration.termInterval?.defaultValue);
+  }, [calculatorConfiguration]);
+
   const getConfiguration = async () => {
     try {
       const response = await fetch(`${API_URL}/constraints`);
       const data = await response.json();
 
-      console.log(data);
+      dispatch(setConfiguration(data));
     } catch (error) {
       console.log(error);
     }
   };
 
   const getLoanInfo = async () => {
-    const amount = 0;
-    const term = 0;
-
     try {
       const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amount}&term=${term}`);
       const data = await response.json();
 
-      console.log(data);
+      dispatch(setInformation(data));
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +59,7 @@ const App = () => {
             <label>Total amount</label>
             <div className="select-wrapper">
               <select id="amount">
+                {/* TODO SET OPTIONS */}
                 <option value="300">300</option>
               </select>
               <p className="amount-value">$</p>
@@ -56,14 +68,14 @@ const App = () => {
           <input
             type="range"
             id="amount-range"
-            min="300"
-            max="8000"
-            step="100"
+            min={calculatorConfiguration.amountInterval?.min}
+            max={calculatorConfiguration.amountInterval?.max}
+            step={calculatorConfiguration.amountInterval?.step}
             onChange={event => amoutRange(event.target.value)}
           />
           <div className="flex-group">
-            <p className="m-0 medium-font">$300</p>
-            <p className="m-0 medium-font">$800</p>
+            <p className="m-0 medium-font">${calculatorConfiguration.amountInterval?.min}</p>
+            <p className="m-0 medium-font">${calculatorConfiguration.amountInterval?.max}</p>
           </div>
         </div>
         <div className="slider-term">
@@ -71,6 +83,7 @@ const App = () => {
             <label>Term</label>
             <div className="select-wrapper">
               <select>
+                {/* TODO SET OPTIONS */}
                 <option value="7">7</option>
               </select>
               <p className="term-value small-font">days</p>
@@ -79,37 +92,37 @@ const App = () => {
           <input
             type="range"
             id="term-range"
-            min="7"
-            max="30"
-            step="1"
+            min={calculatorConfiguration.termInterval?.min}
+            max={calculatorConfiguration.termInterval?.max}
+            step={calculatorConfiguration.termInterval?.step}
             onChange={event => termRange(event.target.value)}
           />
           <div className="flex-group">
-            <p className="m-0 medium-font">7</p>
-            <p className="m-0 medium-font">30</p>
+            <p className="m-0 medium-font">{calculatorConfiguration.termInterval?.min}</p>
+            <p className="m-0 medium-font">{calculatorConfiguration.termInterval?.max}</p>
           </div>
         </div>
       </section>
       <section className="loan-info">
         <div className="flex-group border-bottom-black">
           <p>Loan</p>
-          <p>$1,000.00 MXN</p>
+          <p>${loanInformation.totalPrincipal} MXN</p>
         </div>
         <div className="flex-group border-bottom-black">
           <p>Term</p>
-          <p>18 days</p>
+          <p>{loanInformation.term} days</p>
         </div>
         <div className="flex-group border-bottom-black">
           <p>Interest</p>
           <div>
-            <p className="mb-0">$271.44 MXN</p>
+            <p className="mb-0">${loanInformation.totalCostOfCredit} MXN</p>
             <p className="small-font text-center">VAT included</p>
           </div>
         </div>
         <div className="flex-group border-bottom-black">
           <p>Commission per disposition</p>
           <div>
-            <p className="mb-0">$1,358.44 MXN</p>
+            <p className="mb-0">${loanInformation.monthlyPayment} MXN</p>
             <p className="small-font text-center">VAT included</p>
           </div>
         </div>
@@ -119,7 +132,7 @@ const App = () => {
           </p>
           <div>
             <p className="mb-0">
-              <strong>$1,358.44 MXN</strong>
+              <strong>{loanInformation.totalRepayableAmount} MXN</strong>
             </p>
             <p className="small-font text-center">VAT included</p>
           </div>
