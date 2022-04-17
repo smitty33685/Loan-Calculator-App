@@ -5,6 +5,7 @@ import { RootState } from "./types/types";
 import { setConfiguration, setInformation } from "./actions";
 import Loader from "./components/loader/Loader";
 import Error from "./components/error/Error";
+import { saveToCache, readFromCache } from "./cache/cache";
 import "./App.scss";
 
 const App = () => {
@@ -16,14 +17,6 @@ const App = () => {
   const [termOptions, setTermOptions] = useState<number[]>([]);
   const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
-
-  const amoutRange = (val: string) => {
-    setAmount(Number(val));
-  };
-
-  const termRange = (val: any) => {
-    setTerm(Number(val));
-  };
 
   useEffect(() => {
     getConfiguration();
@@ -56,11 +49,19 @@ const App = () => {
   };
 
   const getLoanInfo = async (amountParam: number = amount, termParam: number = term) => {
+    const cacheObj = readFromCache(`${amountParam}-${termParam}`);
+    setError("");
+
+    if (cacheObj) {
+      dispatch(setInformation(cacheObj));
+      return;
+    }
+
     try {
-      setError("");
       const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amountParam}&term=${termParam}`);
       const data = await response.json();
 
+      saveToCache(`${amountParam}-${termParam}`, data);
       dispatch(setInformation(data));
     } catch (error: any) {
       setError(error.name);
@@ -101,10 +102,10 @@ const App = () => {
               <div className="form-group">
                 <label>Total amount</label>
                 <div className="select-wrapper">
-                  <select id="amount" value={amount} onChange={event => amoutRange(event.target.value)}>
-                    {amountOptions.map((el: number) => (
-                      <option key={el} value={el}>
-                        {el}
+                  <select id="amount" value={amount} onChange={event => setAmount(Number(event.target.value))}>
+                    {amountOptions.map((amountOption: number) => (
+                      <option key={amountOption} value={amountOption}>
+                        {amountOption}
                       </option>
                     ))}
                   </select>
@@ -118,7 +119,7 @@ const App = () => {
                 min={calculatorConfiguration.amountInterval.min}
                 max={calculatorConfiguration.amountInterval.max}
                 step={calculatorConfiguration.amountInterval.step}
-                onChange={event => amoutRange(event.target.value)}
+                onChange={event => setAmount(Number(event.target.value))}
               />
               <div className="flex-group">
                 <p className="m-0 medium-font">${calculatorConfiguration.amountInterval.min}</p>
@@ -129,10 +130,10 @@ const App = () => {
               <div className="form-group">
                 <label>Term</label>
                 <div className="select-wrapper">
-                  <select id="term" value={term} onChange={event => termRange(event.target.value)}>
-                    {termOptions.map((el: number) => (
-                      <option key={el} value={el}>
-                        {el}
+                  <select id="term" value={term} onChange={event => setTerm(Number(event.target.value))}>
+                    {termOptions.map((termOption: number) => (
+                      <option key={termOption} value={termOption}>
+                        {termOption}
                       </option>
                     ))}
                   </select>
@@ -146,7 +147,7 @@ const App = () => {
                 min={calculatorConfiguration.termInterval.min}
                 max={calculatorConfiguration.termInterval.max}
                 step={calculatorConfiguration.termInterval.step}
-                onChange={event => termRange(event.target.value)}
+                onChange={event => setTerm(Number(event.target.value))}
               />
               <div className="flex-group">
                 <p className="m-0 medium-font">{calculatorConfiguration.termInterval.min}</p>
