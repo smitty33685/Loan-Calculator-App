@@ -3,6 +3,8 @@ import { API_URL } from "./utils/constants";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./types/types";
 import { setConfiguration, setInformation } from "./actions";
+import Loader from "./components/loader/Loader";
+import Error from "./components/error/Error";
 import "./App.scss";
 
 const App = () => {
@@ -12,7 +14,7 @@ const App = () => {
   const [term, setTerm] = useState<number>(0);
   const [amountOptions, setAmountOptions] = useState<number[]>([]);
   const [termOptions, setTermOptions] = useState<number[]>([]);
-
+  const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
 
   const amoutRange = (val: string) => {
@@ -43,23 +45,25 @@ const App = () => {
 
   const getConfiguration = async () => {
     try {
+      setError("");
       const response = await fetch(`${API_URL}/constraints`);
       const data = await response.json();
 
       dispatch(setConfiguration(data));
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setError(error.name);
     }
   };
 
   const getLoanInfo = async (amountParam: number = amount, termParam: number = term) => {
     try {
+      setError("");
       const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amountParam}&term=${termParam}`);
       const data = await response.json();
 
       dispatch(setInformation(data));
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setError(error.name);
     }
   };
 
@@ -87,12 +91,10 @@ const App = () => {
 
   return (
     <>
-      {!showContent() && (
-        <main className="loader">
-          <h1>Načítání...</h1>
-        </main>
-      )}
-      {showContent() && (
+      {error && <Error text={error} />}
+      {!showContent() ? (
+        <Loader text="Loading..." />
+      ) : (
         <main className="calculator">
           <section className="loan-choice">
             <div className="slider-amount">
