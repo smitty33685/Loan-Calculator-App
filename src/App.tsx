@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./types/types";
 import { setConfiguration, setInformation } from "./actions";
 import Loader from "./components/loader/Loader";
+import RoundedLoader from "./components/rounded-loader/RoundedLoader";
 import Error from "./components/error/Error";
 import { saveToCache, readFromCache } from "./cache/cache";
 import "./App.scss";
@@ -16,6 +17,7 @@ const App = () => {
   const [amountOptions, setAmountOptions] = useState<number[]>([]);
   const [termOptions, setTermOptions] = useState<number[]>([]);
   const [error, setError] = useState<string>("");
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -58,6 +60,7 @@ const App = () => {
     }
 
     try {
+      setShowLoader(true);
       const response = await fetch(`${API_URL}/real-first-loan-offer?amount=${amountParam}&term=${termParam}`);
       const data = await response.json();
 
@@ -65,6 +68,8 @@ const App = () => {
       dispatch(setInformation(data));
     } catch (error: any) {
       setError(error.name);
+    } finally {
+      setShowLoader(false);
     }
   };
 
@@ -97,6 +102,7 @@ const App = () => {
         <Loader text="Loading..." />
       ) : (
         <main className="calculator">
+          {showLoader && <RoundedLoader />}
           <section className="loan-choice">
             <div className="slider-amount">
               <div className="form-group">
