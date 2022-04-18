@@ -1,11 +1,8 @@
 import React from "react";
+import { ErrorProps } from "../../types/interfaces";
 import "./error.scss";
 
-interface Props {
-  text: string;
-}
-
-const Error: React.FC<Props> = ({ text }) => {
+const Error: React.FC<ErrorProps> = ({ text }) => {
   return (
     <div className="error">
       <h1>{text}</h1>

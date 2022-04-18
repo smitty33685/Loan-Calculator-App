@@ -3,6 +3,7 @@ import { API_URL } from "./utils/constants";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./types/types";
 import { setConfiguration, setInformation } from "./actions";
+import Slider from "./components/slider/Slider";
 import Loader from "./components/loader/Loader";
 import RoundedLoader from "./components/rounded-loader/RoundedLoader";
 import Error from "./components/error/Error";
@@ -22,6 +23,7 @@ const App = () => {
 
   useEffect(() => {
     getConfiguration();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -36,6 +38,7 @@ const App = () => {
       setAmountSelect(calculatorConfiguration.amountInterval.min, calculatorConfiguration.amountInterval.max);
       setTermSelect(calculatorConfiguration.termInterval.min, calculatorConfiguration.termInterval.max);
     }
+    // eslint-disable-next-line
   }, [calculatorConfiguration]);
 
   const getConfiguration = async () => {
@@ -105,60 +108,24 @@ const App = () => {
           {showLoader && <RoundedLoader />}
           <section className="loan-choice">
             <div className="slider-amount">
-              <div className="form-group">
-                <label>Total amount</label>
-                <div className="select-wrapper">
-                  <select id="amount" value={amount} onChange={event => setAmount(Number(event.target.value))}>
-                    {amountOptions.map((amountOption: number) => (
-                      <option key={amountOption} value={amountOption}>
-                        {amountOption}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="amount-value">$</p>
-                </div>
-              </div>
-              <input
-                type="range"
-                id="amount-range"
-                value={amount}
-                min={calculatorConfiguration.amountInterval.min}
-                max={calculatorConfiguration.amountInterval.max}
-                step={calculatorConfiguration.amountInterval.step}
+              <Slider
+                amount={amount}
+                options={amountOptions}
+                label="Total amount"
+                valueClasses="amount-value"
+                calculatorConfiguration={calculatorConfiguration.amountInterval}
                 onChange={event => setAmount(Number(event.target.value))}
               />
-              <div className="flex-group">
-                <p className="m-0 medium-font">${calculatorConfiguration.amountInterval.min}</p>
-                <p className="m-0 medium-font">${calculatorConfiguration.amountInterval.max}</p>
-              </div>
             </div>
             <div className="slider-term">
-              <div className="form-group">
-                <label>Term</label>
-                <div className="select-wrapper">
-                  <select id="term" value={term} onChange={event => setTerm(Number(event.target.value))}>
-                    {termOptions.map((termOption: number) => (
-                      <option key={termOption} value={termOption}>
-                        {termOption}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="term-value small-font">days</p>
-                </div>
-              </div>
-              <input
-                type="range"
-                id="term-range"
-                value={term}
-                min={calculatorConfiguration.termInterval.min}
-                max={calculatorConfiguration.termInterval.max}
-                step={calculatorConfiguration.termInterval.step}
+              <Slider
+                amount={term}
+                options={termOptions}
+                label="Term"
+                valueClasses="term-value small-font"
+                calculatorConfiguration={calculatorConfiguration.termInterval}
                 onChange={event => setTerm(Number(event.target.value))}
               />
-              <div className="flex-group">
-                <p className="m-0 medium-font">{calculatorConfiguration.termInterval.min}</p>
-                <p className="m-0 medium-font">{calculatorConfiguration.termInterval.max}</p>
-              </div>
             </div>
           </section>
           <section className="loan-info">

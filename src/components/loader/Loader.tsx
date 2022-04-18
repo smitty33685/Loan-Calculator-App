@@ -1,11 +1,8 @@
 import React from "react";
+import { LoaderProps } from "../../types/interfaces";
 import "./loader.scss";
 
-interface Props {
-  text: string;
-}
-
-const Loader: React.FC<Props> = ({ text }) => {
+const Loader: React.FC<LoaderProps> = ({ text }) => {
   return (
     <main className="loader">
       <h1>{text}</h1>
