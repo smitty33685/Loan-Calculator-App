@@ -180,7 +180,7 @@ const App = () => {
             <div className="flex-group border-bottom-black">
               <p>Commission per disposition</p>
               <div>
-                <p className="mb-0">${loanInformation.monthlyPayment} MXN</p>
+                <p className="mb-0">${String(loanInformation.monthlyPayment).slice(0, 8)} MXN</p>
                 <p className="small-font text-center">VAT included</p>
               </div>
             </div>
