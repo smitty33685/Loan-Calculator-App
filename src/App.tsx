@@ -171,15 +171,6 @@ const App = () => {
               </p>
             </div>
 
-            <section className="text-content">
-              <p>
-                <strong>CAT: 7051.76 %</strong> average without VAT for informational and comparison purposes only.
-              </p>
-              <p>Calculation date: 15/APR/2022</p>
-              <p>Calculator for informational and comparison purposes.</p>
-              <p>We never request advances, fees, policy payments or any other concept to grant you a loan.</p>
-            </section>
-
             <button onClick={() => getLoanInfo()} className="btn-primary">
               Request it now
             </button>
